@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: https://cdn.discordapp.com https://media.discordapp.net; style-src 'self'; font-src 'self'; script-src 'self'; connect-src 'none'">
+<title>Create Economy</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="bg" aria-hidden="true"><div class="slide"></div><div class="slide"></div></div>
+<div id="shade" aria-hidden="true"></div>
+
+<header id="titlebar">
+  <img src="../../assets/img/icon.png" alt="" class="tb-icon">
+  <span class="tb-title">Create Economy</span>
+  <div class="tb-drag"></div>
+  <div class="tb-buttons">
+    <button data-win="min" title="Minimise" aria-label="Minimise"><svg viewBox="0 0 10 10"><path d="M1 5.5h8"/></svg></button>
+    <button data-win="max" title="Maximise" aria-label="Maximise"><svg viewBox="0 0 10 10"><rect x="1.5" y="1.5" width="7" height="7"/></svg></button>
+    <button data-win="close" class="tb-close" title="Close" aria-label="Close"><svg viewBox="0 0 10 10"><path d="M1.5 1.5l7 7M8.5 1.5l-7 7"/></svg></button>
+  </div>
+</header>
+
+<nav id="side">
+  <button class="nav on" data-view="home" title="Play">
+    <svg viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z"/></svg><span>Play</span>
+  </button>
+  <button class="nav" data-view="ranks" title="Leaderboards">
+    <svg viewBox="0 0 24 24"><path d="M8 4h8v5a4 4 0 0 1-8 0zM8 6H5v1a3 3 0 0 0 3 3M16 6h3v1a3 3 0 0 1-3 3M12 13v4M8 20h8M9.5 17h5v3h-5z"/></svg><span>Ranks</span>
+  </button>
+  <button class="nav" data-view="news" title="News">
+    <svg viewBox="0 0 24 24"><path d="M4 5h13v14H6a2 2 0 0 1-2-2zM17 9h3v8a2 2 0 0 1-2 2M7 9h7M7 12h7M7 15h4"/></svg><span>News</span>
+  </button>
+  <button class="nav" data-view="settings" title="Settings">
+    <svg viewBox="0 0 24 24"><path d="M10 3h4l.6 2.6 2.2 1.3 2.6-.8 2 3.4-2 1.9v2.6l2 1.9-2 3.4-2.6-.8-2.2 1.3L14 21h-4l-.6-2.6-2.2-1.3-2.6.8-2-3.4 2-1.9v-2.6l-2-1.9 2-3.4 2.6.8 2.2-1.3z"/><circle cx="12" cy="12" r="3"/></svg><span>Settings</span>
+  </button>
+  <div class="side-gap"></div>
+  <button class="nav ext" data-url="discord" title="Discord">
+    <svg viewBox="0 0 24 24"><path d="M6 6.5C8 5.6 9.6 5.2 12 5.2s4 .4 6 1.3c1.4 2.3 2 4.8 1.8 9.3-1.6 1.3-3.2 2-4.6 2.2l-1-1.7M6 6.5C4.6 8.8 4 11.3 4.2 15.8c1.6 1.3 3.2 2 4.6 2.2l1-1.7"/><circle cx="9.3" cy="12.3" r="1.2"/><circle cx="14.7" cy="12.3" r="1.2"/></svg><span>Discord</span>
+  </button>
+  <button class="nav ext" data-url="website" title="Website and map">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M4 12h16M12 4c2.4 2.4 2.4 13.6 0 16M12 4c-2.4 2.4-2.4 13.6 0 16"/></svg><span>Website</span>
+  </button>
+</nav>
+
+<main id="views">
+  <!-- HOME -->
+  <section class="view on" data-view="home">
+    <div class="home">
+      <div class="home-left">
+        <img class="badge" src="../../assets/img/badge.png" alt="Create Economy">
+        <h1>Create Economy</h1>
+        <p class="tagline">Your factory is your income.</p>
+        <div class="cards">
+          <div class="card status" id="status">
+            <span class="dot" id="st-dot"></span>
+            <div>
+              <div class="card-big" id="st-text">Checking the server</div>
+              <div class="card-small"><span id="st-addr">play.create-economy.net</span> <button class="link" id="copy-addr">Copy</button></div>
+            </div>
+          </div>
+          <div class="card" id="packcard">
+            <div class="card-big" id="pk-ver">Pack</div>
+            <div class="card-small" id="pk-info">Looking for updates</div>
+          </div>
+        </div>
+
+      </div>
+      <aside class="home-right">
+        <div class="panel" id="me-card"></div>
+        <div class="panel" id="online-panel"></div>
+        <div id="home-news"></div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- LEADERBOARDS -->
+  <section class="view" data-view="ranks">
+    <div class="page wide">
+      <h2>Leaderboards</h2>
+      <p class="sub">Live from the server. Your row is highlighted.</p>
+      <div class="me-strip" id="me-strip"></div>
+      <div class="boards">
+        <div class="board">
+          <div class="board-head"><h3>Votes</h3>
+            <div class="seg" id="vote-seg"><button data-k="month" class="on">This month</button><button data-k="allTime">All time</button></div>
+          </div>
+          <div class="rows" id="vote-rows"></div>
+        </div>
+        <div class="board">
+          <div class="board-head"><h3>Money</h3><span class="muted small" id="money-total"></span></div>
+          <div class="rows" id="money-rows"></div>
+        </div>
+        <div class="board">
+          <div class="board-head"><h3>Online now</h3><span class="muted small" id="online-count"></span></div>
+          <div class="rows plain" id="online-rows"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEWS -->
+  <section class="view" data-view="news">
+    <div class="page">
+      <h2>News</h2>
+      <p class="sub">Straight from the server's Discord: announcements, updates and modpack changes.</p>
+      <div id="news-list" class="news-list"><p class="muted">Loading news</p></div>
+      <h3>Pack changes</h3>
+      <div id="pack-history" class="history"></div>
+    </div>
+  </section>
+
+  <!-- SETTINGS -->
+  <section class="view" data-view="settings">
+    <div class="page settings">
+      <h2>Settings</h2>
+      <div class="group">
+        <h3>Memory</h3>
+        <label class="row col">
+          <span class="row-head"><span>RAM for Minecraft</span><b id="mem-val">6 GB</b></span>
+          <input type="range" id="mem" min="3072" max="16384" step="512">
+          <span class="hint" id="mem-hint">Recommended: 6 GB. Your computer has 16 GB.</span>
+        </label>
+      </div>
+      <div class="group">
+        <h3>Game</h3>
+        <label class="row"><span>Join the server as soon as the game opens</span><input type="checkbox" id="autojoin" class="switch"></label>
+        <label class="row"><span>When the game starts</span>
+          <select id="after">
+            <option value="close">Close the launcher</option>
+            <option value="minimize">Minimise the launcher</option>
+            <option value="stay">Keep the launcher open</option>
+          </select>
+        </label>
+        <label class="row"><span>Window size</span>
+          <span class="pair"><input type="number" id="w" min="854" max="7680"> x <input type="number" id="h" min="480" max="4320"></span>
+        </label>
+      </div>
+      <div class="group">
+        <h3>Shortcuts</h3>
+        <div class="row"><span>Desktop and Start menu shortcut</span><button class="btn" id="mk-shortcut">Create</button></div>
+        <div class="row"><span>Pin to your taskbar or Dock</span><button class="btn" id="pin-help">Show me how</button></div>
+      </div>
+      <div class="group">
+        <h3>Files</h3>
+        <div class="row"><span>Game folder (mods, screenshots, saves)</span><button class="btn" data-open="game">Open</button></div>
+        <div class="row"><span>Crash reports</span><button class="btn" data-open="crashes">Open</button></div>
+        <div class="row"><span>Launcher logs</span><button class="btn" data-open="logs">Open</button></div>
+        <div class="row"><span>Something broken? Re-check every file</span><button class="btn" id="repair">Repair</button></div>
+      </div>
+      <div class="group" id="name-group">
+        <h3>You</h3>
+        <div class="row"><span>Your Minecraft name (for your ranks on the leaderboards)</span>
+          <span class="pair"><input type="text" id="my-name" maxlength="16" spellcheck="false" placeholder="Name"><button class="btn" id="save-name">Save</button></span></div>
+      </div>
+      <div class="group" id="acc-group">
+        <h3>Accounts</h3>
+        <div id="acc-list"></div>
+        <div class="row"><span>Another Microsoft account</span><button class="btn" id="add-acc">Add account</button></div>
+      </div>
+      <p class="muted small" id="about">Create Economy Launcher</p>
+    </div>
+  </section>
+</main>
+
+<footer id="bar">
+  <div class="acc" id="acc">
+    <canvas id="head" width="32" height="32"></canvas>
+    <div class="acc-text"><span class="acc-name" id="acc-name">Not signed in</span><span class="acc-sub" id="acc-sub">Microsoft account</span></div>
+  </div>
+  <div class="play-wrap">
+    <div class="play" id="play-group">
+      <button id="play" class="play-main"><span id="play-label">Play</span><small id="play-sub">Join Create Economy</small></button>
+      <button id="play-more" class="play-more" aria-label="More ways to play"><svg viewBox="0 0 10 10"><path d="M2 3.5l3 3 3-3"/></svg></button>
+      <div class="menu" id="play-menu" hidden>
+        <button data-mode="join"><b>Play and join the server</b><span>Opens straight into Create Economy</span></button>
+        <button data-mode="menu"><b>Play to the main menu</b><span>Singleplayer, settings, other servers</span></button>
+        <button data-mode="official"><b>Play through the Minecraft Launcher</b><span>Adds a Create Economy profile there</span></button>
+      </div>
+    </div>
+    <div class="belt" id="belt" hidden>
+      <div class="belt-track"><div class="belt-fill" id="belt-fill"></div></div>
+      <div class="belt-text"><span id="belt-text">Preparing</span><span id="belt-num"></span></div>
+    </div>
+  </div>
+  <div class="bar-right" id="bar-right">
+    <span id="update-pill" class="pill" hidden></span>
+    <span class="muted small" id="ver-line"></span>
+  </div>
+</footer>
+
+<!-- Game loading screen -->
+<div id="loading" hidden>
+  <div class="load-center">
+    <div class="cogs" aria-hidden="true">
+      <svg class="cog big" viewBox="0 0 100 100"><use href="#cog"/></svg>
+      <svg class="cog small" viewBox="0 0 100 100"><use href="#cog"/></svg>
+    </div>
+    <img class="load-badge" src="../../assets/img/badge.png" alt="">
+    <div class="load-stage" id="load-stage">Starting Create Economy</div>
+    <div class="belt wide"><div class="belt-track"><div class="belt-fill" id="load-fill"></div></div></div>
+    <div class="load-tip" id="load-tip"></div>
+  </div>
+</div>
+
+<!-- dialogs -->
+<div id="modal" hidden><div class="modal-box" id="modal-box"></div></div>
+
+<svg class="defs" width="0" height="0">
+  <defs>
+    <g id="cog">
+      <path d="M44 4h12v12l9 3.6 8.4-8.4 8.5 8.5-8.4 8.4L77 37h12v12h0v2h0v12H77l-3.6 9 8.4 8.4-8.5 8.5-8.4-8.4L56 84v12H44V84l-9-3.6-8.4 8.4-8.5-8.5 8.4-8.4L23 63H11V51h0v-2h0V37h12l3.6-9-8.4-8.4 8.5-8.5 8.4 8.4L44 16z" class="cog-body"/>
+      <rect x="38" y="38" width="24" height="24" class="cog-hole"/>
+    </g>
+  </defs>
+</svg>
+<script src="app.js"></script>
+</body>
+</html>

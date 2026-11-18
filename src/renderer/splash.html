@@ -1,0 +1,26 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self'; font-src 'self'">
+<title>Create Economy</title>
+<style>
+@font-face { font-family: "Pixelify Sans"; src: url("../../assets/fonts/PixelifySans.ttf"); }
+html, body { margin: 0; height: 100%; background: transparent; overflow: hidden; -webkit-app-region: drag; user-select: none; }
+.wrap { position: absolute; inset: 20px; border-radius: 50%; display: grid; place-items: center; }
+.cog { position: absolute; }
+.cog path { fill: #6b4f32; stroke: #2e2114; stroke-width: 3; }
+.cog rect { fill: #3d3d3d; stroke: #1c1c1c; stroke-width: 3; }
+.c1 { width: 360px; height: 360px; left: 20px; top: 20px; animation: spin 10s linear infinite; }
+.c2 { width: 150px; height: 150px; right: -6px; bottom: -6px; animation: spin 4.3s linear infinite reverse; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.badge { width: 250px; height: 250px; position: relative; filter: drop-shadow(0 6px 0 rgba(0,0,0,.5)); animation: pop .5s cubic-bezier(.2,1.4,.4,1) both; }
+@keyframes pop { from { transform: scale(.6); opacity: 0; } }
+.txt { position: absolute; bottom: 4px; left: 0; right: 0; text-align: center; font: 600 16px "Pixelify Sans", sans-serif; color: #f1ece2; text-shadow: 0 2px 0 #000, 0 0 6px #000; }
+</style></head>
+<body>
+<div class="wrap">
+  <svg class="cog c1" viewBox="0 0 100 100"><path d="M44 4h12v12l9 3.6 8.4-8.4 8.5 8.5-8.4 8.4L77 37h12v26H77l-3.6 9 8.4 8.4-8.5 8.5-8.4-8.4L56 84v12H44V84l-9-3.6-8.4 8.4-8.5-8.5 8.4-8.4L23 63H11V37h12l3.6-9-8.4-8.4 8.5-8.5 8.4 8.4L44 16z"/><rect x="38" y="38" width="24" height="24"/></svg>
+  <svg class="cog c2" viewBox="0 0 100 100"><path d="M44 4h12v12l9 3.6 8.4-8.4 8.5 8.5-8.4 8.4L77 37h12v26H77l-3.6 9 8.4 8.4-8.5 8.5-8.4-8.4L56 84v12H44V84l-9-3.6-8.4 8.4-8.5-8.5 8.4-8.4L23 63H11V37h12l3.6-9-8.4-8.4 8.5-8.5 8.4 8.4L44 16z"/><rect x="38" y="38" width="24" height="24"/></svg>
+  <img class="badge" src="../../assets/img/badge.png" alt="Create Economy">
+</div>
+<div class="txt">Starting up</div>
+</body></html>

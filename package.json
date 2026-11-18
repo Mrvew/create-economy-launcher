@@ -1,0 +1,140 @@
+{
+  "name": "create-economy-launcher",
+  "productName": "Create Economy Launcher",
+  "version": "1.0.0",
+  "description": "Launcher for the Create Economy Minecraft server",
+  "main": "src/main/main.js",
+  "author": "mr_vew",
+  "license": "UNLICENSED",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "dist:win": "electron-builder --win --publish never",
+    "dist:mac": "electron-builder --mac --publish never",
+    "dist:linux": "electron-builder --linux --publish never"
+  },
+  "devDependencies": {
+    "electron": "^45.3.3",
+    "electron-builder": "^26.18.0"
+  },
+  "dependencies": {
+    "electron-updater": "^6.8.11"
+  },
+  "homepage": "https://create-economy.net",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Mrvew/create-economy-launcher.git"
+  },
+  "build": {
+    "appId": "net.create-economy.launcher",
+    "productName": "Create Economy Launcher",
+    "copyright": "Copyright 2026 Create Economy",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "src/**/*",
+      "assets/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "build/icon.ico",
+        "to": "icon.ico"
+      },
+      {
+        "from": "build/icon.png",
+        "to": "icon.png"
+      }
+    ],
+    "asar": true,
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "Mrvew",
+        "repo": "create-economy-launcher",
+        "releaseType": "release"
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.ico",
+      "artifactName": "Create-Economy-Launcher-Setup-${version}-${arch}.${ext}"
+    },
+    "portable": {
+      "artifactName": "Create-Economy-Launcher-Portable-${version}.${ext}"
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "createDesktopShortcut": "always",
+      "createStartMenuShortcut": true,
+      "shortcutName": "Create Economy",
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico",
+      "runAfterFinish": true,
+      "deleteAppDataOnUninstall": false
+    },
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "universal"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "universal"
+          ]
+        }
+      ],
+      "icon": "build/icon.icns",
+      "category": "public.app-category.games",
+      "identity": "-",
+      "hardenedRuntime": false,
+      "artifactName": "Create-Economy-Launcher-${version}-mac.${ext}"
+    },
+    "dmg": {
+      "title": "Create Economy",
+      "contents": [
+        {
+          "x": 150,
+          "y": 190
+        },
+        {
+          "x": 390,
+          "y": 190,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "icon": "build/icon.png",
+      "category": "Game",
+      "artifactName": "Create-Economy-Launcher-${version}.${ext}",
+      "executableName": "create-economy-launcher"
+    }
+  }
+}

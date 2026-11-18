@@ -1,0 +1,41 @@
+# Builds the Windows, macOS and Linux launchers and publishes them as a GitHub release.
+# Run it by pushing a tag:  git tag v1.0.1 && git push origin v1.0.1
+# Installed launchers find the new release by themselves (electron-updater).
+name: Release launcher
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            target: --win
+          - os: macos-latest
+            target: --mac
+          - os: ubuntu-latest
+            target: --linux
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Build and publish
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Set this repository secret to your Azure app's client id to turn on "Sign in with Microsoft".
+          CE_MS_CLIENT_ID: ${{ secrets.CE_MS_CLIENT_ID }}
+        run: |
+          node scripts/bake-config.js
+          npx electron-builder ${{ matrix.target }} --publish always
