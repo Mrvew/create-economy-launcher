@@ -74,10 +74,10 @@
         }
       ],
       "icon": "build/icon.ico",
-      "artifactName": "Create-Economy-Launcher-Setup-${version}-${arch}.${ext}"
+      "artifactName": "Create-Economy-Launcher-Setup-${arch}.${ext}"
     },
     "portable": {
-      "artifactName": "Create-Economy-Launcher-Portable-${version}.${ext}"
+      "artifactName": "Create-Economy-Launcher-Portable.${ext}"
     },
     "nsis": {
       "oneClick": true,
@@ -109,7 +109,7 @@
       "category": "public.app-category.games",
       "identity": "-",
       "hardenedRuntime": false,
-      "artifactName": "Create-Economy-Launcher-${version}-mac.${ext}"
+      "artifactName": "Create-Economy-Launcher-mac.${ext}"
     },
     "dmg": {
       "title": "Create Economy",
@@ -132,7 +132,7 @@
       ],
       "icon": "build/icon.png",
       "category": "Game",
-      "artifactName": "Create-Economy-Launcher-${version}.${ext}",
+      "artifactName": "Create-Economy-Launcher.${ext}",
       "executableName": "create-economy-launcher"
     }
   }
