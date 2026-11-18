@@ -194,6 +194,7 @@ async function play({ join }) {
       ],
     });
     progress({ stage: 'launch', text: 'Starting Minecraft' });
+    if (settings.afterLaunch === 'close') return launchAndClose(java.java, args);
     const logFile = fs.createWriteStream(path.join(P.logs, 'game-output.log'));
     const proc = spawn(java.java, args, { cwd: P.instance, detached: false, windowsHide: false });
     game = { proc, started: Date.now(), tail: [] };
@@ -235,6 +236,46 @@ async function play({ join }) {
     busy = false;
     send('progress', { stage: 'idle' });
   }
+}
+
+/**
+ * "Close the launcher": start the game as its own process (output straight to the log file, so it
+ * doesn't need us), wait until it is really loading, then quit. If it dies straight away, stay open
+ * and show why.
+ */
+function launchAndClose(javaPath, args) {
+  const logPath = path.join(P.logs, 'game-output.log');
+  const fd = fs.openSync(logPath, 'w');
+  const proc = spawn(javaPath, args, { cwd: P.instance, detached: true, windowsHide: false, stdio: ['ignore', fd, fd] });
+  fs.closeSync(fd);
+  game = { proc, started: Date.now(), tail: [] };
+  send('game', { state: 'starting' });
+  let exited = null;
+  proc.on('exit', (code) => { exited = code; });
+  proc.on('error', (e) => { exited = -1; logLine('game failed to start: ' + e); });
+  const tail = () => {
+    try { return fs.readFileSync(logPath, 'utf8').split(/\r?\n/).filter(Boolean).slice(-30); } catch { return []; }
+  };
+  const started = Date.now();
+  const timer = setInterval(() => {
+    if (exited !== null) {
+      clearInterval(timer);
+      game = null;
+      if (win) { win.show(); win.restore(); }
+      send('game', { state: 'stopped', code: exited, crashed: exited !== 0, ranMs: Date.now() - started, tail: tail() });
+      return;
+    }
+    let text = '';
+    try { text = fs.readFileSync(logPath, 'utf8'); } catch { /* not written yet */ }
+    // The game's own loading window is up (or it has clearly been running a while): we're done.
+    if (/ImmediateWindowProvider|Loading mods|ModLauncher running/i.test(text) || Date.now() - started > 15000) {
+      clearInterval(timer);
+      send('game', { state: 'loading' });
+      proc.unref();
+      setTimeout(() => app.exit(0), 1200);
+    }
+  }, 500);
+  return { ok: true };
 }
 
 async function playOfficial() {
