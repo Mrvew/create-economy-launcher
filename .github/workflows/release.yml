@@ -1,6 +1,8 @@
-# Builds the Windows, macOS and Linux launchers and publishes them as a GitHub release.
-# Run it by pushing a tag:  git tag v1.0.1 && git push origin v1.0.1
-# Installed launchers find the new release by themselves (electron-updater).
+# Builds the Windows, macOS and Linux launchers.
+# - Push a tag (git tag v1.0.1 && git push origin v1.0.1): builds AND publishes a GitHub release.
+#   Installed launchers find the new release by themselves (electron-updater).
+# - "Run workflow" by hand (Actions tab, or: gh workflow run release.yml): builds only, and keeps the
+#   files as downloadable workflow artifacts for 7 days. Nothing is published as a release.
 name: Release launcher
 
 on:
@@ -19,10 +21,18 @@ jobs:
         include:
           - os: windows-latest
             target: --win
+            files: |
+              dist/*.exe
           - os: macos-latest
             target: --mac
+            files: |
+              dist/*.dmg
+              dist/*-mac.zip
           - os: ubuntu-latest
             target: --linux
+            files: |
+              dist/*.AppImage
+              dist/*.deb
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -31,11 +41,24 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - name: Build and publish
+      - name: Bake build settings
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # Set this repository secret to your Azure app's client id to turn on "Sign in with Microsoft".
           CE_MS_CLIENT_ID: ${{ secrets.CE_MS_CLIENT_ID }}
-        run: |
-          node scripts/bake-config.js
-          npx electron-builder ${{ matrix.target }} --publish always
+        run: node scripts/bake-config.js
+      - name: Build and publish (tag)
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx electron-builder ${{ matrix.target }} --publish always
+      - name: Build only (manual run)
+        if: ${{ !startsWith(github.ref, 'refs/tags/') }}
+        run: npx electron-builder ${{ matrix.target }} --publish never
+      - name: Keep the files
+        if: ${{ !startsWith(github.ref, 'refs/tags/') }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: launcher-${{ matrix.os }}
+          path: ${{ matrix.files }}
+          if-no-files-found: warn
+          retention-days: 7
